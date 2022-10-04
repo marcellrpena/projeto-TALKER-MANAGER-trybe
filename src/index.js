@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const CryptoJS = require('crypto');
 const { readAllTalkers, readIdTalker } = require('./utils/fsUtils');
 const { testIdExist } = require('./middlewares/getterTalkers');
 // const fs = require('fs').promises;
@@ -31,4 +32,11 @@ app.get('/talker/:id', testIdExist, async (req, res) => {
   const { id } = req.params;
   const data = await readIdTalker(Number(id));
   res.status(200).json(data);
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const token = CryptoJS.randomBytes(8).toString('hex');
+  console.log(email, password, token);
+  res.status(200).json({ token });
 });
