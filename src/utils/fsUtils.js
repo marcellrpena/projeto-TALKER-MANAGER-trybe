@@ -9,6 +9,14 @@ const readAllTalkers = async () => {
   return data;
 };
 
+const readIdTalker = async (id) => {
+  const request = await fs.readFile(PATH_NAMES);
+  const data = await JSON.parse(request);
+  console.log(data.find((e) => e.id === id));
+  return data.find((e) => e.id === id);
+};
+
 module.exports = {
   readAllTalkers,
+  readIdTalker,
 };

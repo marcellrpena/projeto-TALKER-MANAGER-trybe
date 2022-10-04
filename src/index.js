@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readAllTalkers } = require('./utils/fsUtils');
+const { readAllTalkers, readIdTalker } = require('./utils/fsUtils');
+const { testIdExist } = require('./middlewares/getterTalkers');
 // const fs = require('fs').promises;
 // const path = require('path');
 
@@ -21,7 +22,13 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.get('/talker', async (req, res) => {
+app.get('/talker', async (_req, res) => {
   const data = await readAllTalkers();
+  res.status(200).json(data);
+});
+
+app.get('/talker/:id', testIdExist, async (req, res) => {
+  const { id } = req.params;
+  const data = await readIdTalker(Number(id));
   res.status(200).json(data);
 });
