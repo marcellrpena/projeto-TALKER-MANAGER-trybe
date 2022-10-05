@@ -27,9 +27,36 @@ const writeTalker = async (talker) => {
 
 const randomToken = () => CryptoJS.randomBytes(8).toString('hex');
 
+const requiredTalk = (data) => {
+  const watchedAt = 'watchedAt' in data.talk && data.talk.watchedAt.length !== 0;
+  const rate = 'rate' in data.talk;
+  if (!watchedAt) {
+    return { status: true, message: 'O campo "watchedAt" é obrigatório' };
+  }
+  if (!rate) {
+    return { status: true, message: 'O campo "rate" é obrigatório' };
+  }
+  return { status: false };
+};
+
+const correctData = (data) => {
+  const validData = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/i;
+  const watchedAt = validData.test(data.talk.watchedAt);
+  const rate = data.talk.rate >= 1 && data.talk.rate <= 5;
+  if (!watchedAt) {
+    return { status: true, message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
+  }
+  if (!rate) {
+    return { status: true, message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
+  }
+  return { status: false };
+};
+
 module.exports = {
   readAllTalkers,
   readIdTalker,
   randomToken,
   writeTalker,
+  correctData,
+  requiredTalk,
 };

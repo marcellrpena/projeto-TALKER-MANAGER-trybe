@@ -1,4 +1,4 @@
-// const { readAllTalkers } = require('../utils/fsUtils');
+const { correctData, requiredTalk } = require('../utils/fsUtils');
 
 function validateName(req, res, next) {
   const required = 'name';
@@ -30,31 +30,6 @@ function validateAge(req, res, next) {
   }
 }
 
-const requiredTalk = (data) => {
-  const watchedAt = 'watchedAt' in data.talk && data.talk.watchedAt.length !== 0;
-  const rate = 'rate' in data.talk;
-  if (!watchedAt) {
-    return { status: true, message: 'O campo "watchedAt" é obrigatório' };
-  }
-  if (!rate) {
-    return { status: true, message: 'O campo "rate" é obrigatório' };
-  }
-  return { status: false };
-};
-
-const correctData = (data) => {
-  const validData = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/i;
-  const watchedAt = validData.test(data.talk.watchedAt);
-  const rate = data.talk.rate >= 1 && data.talk.rate <= 5;
-  if (!watchedAt) {
-    return { status: true, message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
-  }
-  if (!rate) {
-    return { status: true, message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
-  }
-  return { status: false };
-};
-
 function validateTalk(req, res, next) {
   const data = { ...req.body };
   const checkTalkEmpty = 'talk' in req.body;
@@ -71,15 +46,6 @@ function validateTalk(req, res, next) {
     next();
   }
 }
-/* function teste() {
-  // const invalidTokens = [99999999, '99999999', undefined, '123456789012345'];
-  const token = '123456789012345';
-  const wrongLength = token.length === 16;
-  const isNumber = Number.isNaN(Number(token));
-  return isNumber && wrongLength;
-}
-
-console.log(teste()); */
 
 function validateToken(req, res, next) {
   const { authorization } = req.headers;
