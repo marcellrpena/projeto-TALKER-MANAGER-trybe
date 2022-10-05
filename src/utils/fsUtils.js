@@ -16,10 +16,20 @@ const readIdTalker = async (id) => {
   return data.find((e) => e.id === id);
 };
 
+const writeTalker = async (talker) => {
+  const talkers = await readAllTalkers();
+  const id = talkers.length + 1;
+  const newTalkers = [...talkers, { id, ...talker }];
+  await fs.writeFile(PATH_NAMES, JSON.stringify(newTalkers));
+  const data = { id, ...talker };
+  return data;
+};
+
 const randomToken = () => CryptoJS.randomBytes(8).toString('hex');
 
 module.exports = {
   readAllTalkers,
   readIdTalker,
   randomToken,
+  writeTalker,
 };
