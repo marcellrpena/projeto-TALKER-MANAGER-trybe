@@ -16,6 +16,12 @@ const readIdTalker = async (id) => {
   return data.find((e) => e.id === id);
 };
 
+const searchTalker = async (value) => {
+  const request = await readAllTalkers();
+  const searchTalkers = request.filter((e) => e.name.includes(value));
+  return searchTalkers;
+};
+
 const writeTalker = async (talker) => {
   const talkers = await readAllTalkers();
   const id = talkers.length + 1;
@@ -69,6 +75,7 @@ const correctData = (data) => {
 module.exports = {
   readAllTalkers,
   readIdTalker,
+  searchTalker,
   randomToken,
   writeTalker,
   correctData,

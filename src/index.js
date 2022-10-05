@@ -2,8 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { 
 readAllTalkers, readIdTalker,
-randomToken, writeTalker, updateTalker, deleteTalker } = require('./utils/fsUtils');
-const { testIdExist, validateEmail, validatePassword } = require('./middlewares/getterTalkers');
+randomToken, writeTalker,
+updateTalker, deleteTalker, searchTalker } = require('./utils/fsUtils');
+const {
+testIdExist, validateEmail,
+validatePassword, 
+getValidSearch } = require('./middlewares/getterTalkers');
 const { 
 validateName, validateAge,
 validateTalk, validateToken } = require('./middlewares/validateTalker');
@@ -27,8 +31,15 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+app.get('/talker/search', validateToken, getValidSearch, async (req, res) => {
+  const { q } = req.query;
+  const resultSearchTalker = await searchTalker(q);
+  res.status(200).json(resultSearchTalker);
+});
+
 app.get('/talker/:id', testIdExist, async (req, res) => {
   const { id } = req.params;
+  console.log('aqui');
   const data = await readIdTalker(Number(id));
   res.status(200).json(data);
 });

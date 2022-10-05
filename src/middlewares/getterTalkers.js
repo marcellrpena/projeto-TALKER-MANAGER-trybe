@@ -11,6 +11,15 @@ async function testIdExist(req, res, next) {
   }
 }
 
+async function getValidSearch(req, res, next) {
+  const data = await readAllTalkers();
+  const queryExist = 'q' in req.query;
+  if (!queryExist) {
+    return res.status(200).json([...data]);
+  }
+  next();
+}
+
 function validateEmail(req, res, next) {
   const required = 'email';
   const emailValid = /^[a-z0-9.]+@[a-z0-9]+\.([a-z]+)?$/i;
@@ -46,4 +55,5 @@ module.exports = {
   testIdExist,
   validateEmail,
   validatePassword,
+  getValidSearch,
 };
