@@ -33,6 +33,12 @@ const updateTalker = async (talker) => {
   await fs.writeFile(PATH_NAMES, JSON.stringify(newTalkers));
 };
 
+const deleteTalker = async (id) => {
+  const oldTalkers = await readAllTalkers();
+  const newTalkers = oldTalkers.filter((e) => e.id !== id);
+  await fs.writeFile(PATH_NAMES, JSON.stringify(newTalkers));
+};
+
 const randomToken = () => CryptoJS.randomBytes(8).toString('hex');
 
 const requiredTalk = (data) => {
@@ -68,4 +74,5 @@ module.exports = {
   correctData,
   requiredTalk,
   updateTalker,
+  deleteTalker,
 };

@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { 
 readAllTalkers, readIdTalker,
-randomToken, writeTalker, updateTalker } = require('./utils/fsUtils');
+randomToken, writeTalker, updateTalker, deleteTalker } = require('./utils/fsUtils');
 const { testIdExist, validateEmail, validatePassword } = require('./middlewares/getterTalkers');
 const { 
 validateName, validateAge,
@@ -27,14 +27,14 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.get('/talker', async (_req, res) => {
-  const data = await readAllTalkers();
-  res.status(200).json(data);
-});
-
 app.get('/talker/:id', testIdExist, async (req, res) => {
   const { id } = req.params;
   const data = await readIdTalker(Number(id));
+  res.status(200).json(data);
+});
+
+app.get('/talker', async (_req, res) => {
+  const data = await readAllTalkers();
   res.status(200).json(data);
 });
 
@@ -54,4 +54,10 @@ app.put('/talker/:id', validateToken, validateName, validateAge, validateTalk, a
   const talker = { ...req.body, id: Number(req.params.id) };
   await updateTalker(talker);
   res.status(200).json(talker);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const idTalker = Number(req.params.id);
+  await deleteTalker(idTalker);
+  res.sendStatus(204);
 });
