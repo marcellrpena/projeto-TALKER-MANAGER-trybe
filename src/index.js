@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readAllTalkers, readIdTalker, randomToken, writeTalker } = require('./utils/fsUtils');
+const { 
+readAllTalkers, readIdTalker,
+randomToken, writeTalker, updateTalker } = require('./utils/fsUtils');
 const { testIdExist, validateEmail, validatePassword } = require('./middlewares/getterTalkers');
 const { 
-validateName, validateAge, validateTalk, validateToken } = require('./middlewares/validateTalker');
+validateName, validateAge,
+validateTalk, validateToken } = require('./middlewares/validateTalker');
 // const fs = require('fs').promises;
 // const path = require('path');
 
@@ -45,4 +48,10 @@ app.post('/talker', validateToken, validateName, validateAge, validateTalk, asyn
   const talker = { ...req.body };
   const newTalker = await writeTalker(talker);
   res.status(201).json(newTalker);
+});
+
+app.put('/talker/:id', validateToken, validateName, validateAge, validateTalk, async (req, res) => {
+  const talker = { ...req.body, id: Number(req.params.id) };
+  await updateTalker(talker);
+  res.status(200).json(talker);
 });
